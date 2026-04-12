@@ -18,14 +18,14 @@ function Home() {
             accept: 'application/json'
           }
         };
-        console.log("Url : ",url);
-        const response = await fetch(`https://${url}/api/movies`,options);
+        const response = await fetch(`${url}/api/movies`,options);
         
         if(!response.ok){
           throw new Error("network error");
         }
 
         const json = await response.json();
+
         setMovies(json.results);
       }catch(error){
         console.log(error);

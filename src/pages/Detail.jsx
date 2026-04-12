@@ -1,4 +1,4 @@
-import {useParams, Link} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useState, useEffect} from "react";
 import MovieDetail from '../components/MovieDetail.jsx';
 
@@ -18,12 +18,12 @@ function Detail(){
                     }
                 };
 
-                const response = await fetch(`https://${url}/api/detail/${id}`,options);
+                const response = await fetch(`${url}/api/detail/${id}`,options);
                 if(!response.ok){
                     throw new Error("network Error!");
                 }
                 const json = await response.json();
-                console.log(json);
+                
                 setMovieData(json);
             }catch(error){  
                 console.log(error);
