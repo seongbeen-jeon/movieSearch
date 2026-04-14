@@ -41,8 +41,13 @@ function SearchBar(){
             if(!result.results || result.results.length === 0){
                 console.log('검색결과 없음');
             }else{
-                
-                setDropbox(result.results);
+                const processed = result.results.map((movie)=>({
+                    id : movie.id,
+                    title : movie.title,
+                    releaseYear : movie.release_date.split("-")[0],
+                    language : movie.original_language.toUpperCase(),
+                }));
+                setDropbox(processed);
             }
 
         }catch(e){
@@ -53,10 +58,11 @@ function SearchBar(){
 
     return(
         <div className="flex justify-center p-5">
-            <form action="" onSubmit={onsubmit}>
-                <input type="text" className="w-xl p-1 border bg-blue-50" id="search" placeholder ="search" onChange={onchange} />
-                <span onClick = {onsubmit}>검색</span>
-                <div>{dropbox.map(movie=><div key={movie.id}><Link  to = {`/detail/${movie.id}`}>{movie.title}</Link></div>)}</div>
+            <form className ="relative p-1 border bg-blue-50"action="" onSubmit={onsubmit}>
+                <input type="text" className="w-xl" id="search" placeholder ="search" onChange={onchange} />
+                <span onClick = {onsubmit} className='text-right' >검색</span>
+                { dropbox.length > 0 && (
+                    <div className="absolute border p-1 top-full left-0 w-full z-50 bg-white">{dropbox.map(movie=><div key={movie.id}><Link to= {`/detail/${movie.id}`}>{movie.title} ({movie.releaseYear}, {movie.language})</Link></div>)}</div>)}
             </form>  
         </div>
     );
