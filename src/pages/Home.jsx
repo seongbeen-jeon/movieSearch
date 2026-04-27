@@ -22,6 +22,7 @@ function Home() {
       try{
 
         const response = await fetch(`${url}/api/movies?page=${pages}`,options);
+        setLoading(true);
         
         if(!response.ok){
           throw new Error("network error");

@@ -1,11 +1,27 @@
-import {useState} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
 
 
 function SearchBar(){
-
     const [search,setSearch] = useState("");
     const [dropbox,setDropbox] = useState([]);
+    const [isFocused,setIsFocused] = useState(false);
+
+    const boxRef = useRef(null); 
+
+    useEffect(()=>{
+        function handler(e){
+            if( boxRef.current && !boxRef.current.contains(e.target)){
+                setIsFocused(false);
+            }
+        }
+
+        document.addEventListener("mousedown",handler);
+
+        return ()=>{
+            document.removeEventListener("mousedown",handler);
+        }
+    },[]);
 
     function onchange(event){
         const value = event.target.value;
@@ -15,7 +31,6 @@ function SearchBar(){
 
     function onsubmit(event){
         event.preventDefault();
-        console.log("submit");
         
         //api 요청
         handleSearch();
@@ -57,11 +72,18 @@ function SearchBar(){
 
 
     return(
-        <div className="flex justify-center p-5">
-            <form className ="relative p-1 border bg-blue-50"action="" onSubmit={onsubmit}>
-                <input type="text" className="w-xl" id="search" placeholder ="search" onChange={onchange} />
+        <div className="flex justify-center p-5"  >
+            <form className ="relative p-1 border bg-blue-50" ref={boxRef} action="" onSubmit={onsubmit}>
+                <input 
+                    type="text" 
+                    className="w-xl" 
+                    id="search" 
+                    placeholder ="search" 
+                    onChange={onchange} 
+                    onFocus={()=>{setIsFocused(true)}}
+                    />
                 <span onClick = {onsubmit} className='text-right' >검색</span>
-                { dropbox.length > 0 && (
+                { dropbox.length > 0 && isFocused &&(
                     <div className="absolute border p-1 top-full left-0 w-full z-50 bg-white">{dropbox.map(movie=><div key={movie.id}><Link to= {`/detail/${movie.id}`}>{movie.title} ({movie.releaseYear}, {movie.language})</Link></div>)}</div>)}
             </form>  
         </div>
